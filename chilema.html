@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>吃了么</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff8c00">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      background: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .app {
+      background: #fff;
+      width: 90%;
+      max-width: 360px;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    button {
+      font-size: 22px;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      background: #ff8c00;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .info {
+      margin-top: 20px;
+      color: #555;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>今天吃了么？</h1>
+    <button id="checkBtn">💊 吃了！</button>
+    <div class="info" id="info"></div>
+  </div>
+
+  <script>
+    const btn = document.getElementById("checkBtn");
+    const info = document.getElementById("info");
+
+    const today = new Date().toDateString();
+    const lastDate = localStorage.getItem("lastDate");
+    let streak = parseInt(localStorage.getItem("streak")) || 0;
+
+    if (lastDate === today) {
+      btn.disabled = true;
+      info.innerText = `✅ 今天已经吃过了\n🔥 连续 ${streak} 天`;
+    }
+
+    btn.onclick = () => {
+      if (lastDate === today) return;
+
+      if (lastDate === new Date(Date.now() - 86400000).toDateString()) {
+        streak += 1;
+      } else {
+        streak = 1;
+      }
+
+      localStorage.setItem("lastDate", today);
+      localStorage.setItem("streak", streak);
+
+      btn.disabled = true;
+      info.innerText = `🎉 今天吃了！\n🔥 连续 ${streak} 天`;
+    };
+  </script>
+</body>
+</html>
